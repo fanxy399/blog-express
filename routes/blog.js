@@ -52,9 +52,9 @@ router.post('/update', (req, res, next) => {
 router.post('/del', (req, res, next) => {
   const { id } = req.query
   // const loginCheckResult = loginCheck(req)
-  const author = req.session.username || ''
+  // const author = req.session.username || ''
   // if (loginCheckResult) return loginCheckResult
-  deleteBlog(id, author).then(result => {
+  deleteBlog(id, '').then(result => {
     const obj = result ? new SuccessModel('博客删除成功') : new ErrorModel('博客删除失败')
     res.json(obj)
   })

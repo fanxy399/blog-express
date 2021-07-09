@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const session = require('express-session')
+
 var blogRouter = require('./routes/blog');
 var userRouter = require('./routes/user');
 
@@ -18,6 +20,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  resave: true, //添加 resave 选项
+  saveUninitialized: true, //添加 saveUninitialized 选项
+  secret: 'secret-key', // 自定义密钥
+  cookie: {
+    path: '/', // 默认配置
+    httpOnly: true, // 默认配置
+    maxAge: 24*60*60*100
+  }
+}))
 
 app.use('/api/blog', blogRouter);
 app.use('/api/user', userRouter);

@@ -8,8 +8,7 @@ router.post('/login', function(req, res, next) {
   const { username, password } = req.body
   login( username, password )
   .then(result => {
-    // Object.assign(req.session, {username: result.username, realname: result.realname})
-    // setRedis(req.sessionId, req.session)
+    Object.assign(req.session, {username: result.username, realname: result.realname})
     const obj = result.username ? new SuccessModel('用户登陆成功') : new ErrorModel('用户登陆失败')
     res.json(obj)
   })
