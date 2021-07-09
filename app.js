@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
 
 var blogRouter = require('./routes/blog');
 var userRouter = require('./routes/user');
@@ -21,6 +22,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
+const redisClient = require('./db/redis')
+const sessionStore = new RedisStore({
+  client: redisClient
+})
 app.use(session({
   resave: true, //添加 resave 选项
   saveUninitialized: true, //添加 saveUninitialized 选项
@@ -29,7 +34,8 @@ app.use(session({
     path: '/', // 默认配置
     httpOnly: true, // 默认配置
     maxAge: 24*60*60*100
-  }
+  },
+  store: sessionStore
 }))
 
 app.use('/api/blog', blogRouter);
