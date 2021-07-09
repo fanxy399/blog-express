@@ -1,6 +1,8 @@
+
+const fs = require('fs')
+const path = require('path')
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
@@ -16,7 +18,19 @@ var app = express();
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+
+const env = process.env.NODE_ENV
+if(env !== 'production'){
+  app.use(logger('dev'));
+}else{
+  const accessLog = path.join(__dirname, 'logs', 'access.log')
+  const writeStream = fs.createWriteStream(accessLog,{
+    flags: 'a'
+  })
+  app.use(logger('combined',{
+    stream: writeStream
+  }));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
