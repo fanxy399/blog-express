@@ -12,7 +12,6 @@ router.get('/list', function(req, res, next) {
       // 强制查询自己的博客
       author = req.session.username
     }
-    console.log(author, keyword, 'fffffffffffffffffffffffffffffffx')
     getBlogList(author, keyword).then(result => {
       res.json(new SuccessModel(result, '博客列表查询成功'))
     })
